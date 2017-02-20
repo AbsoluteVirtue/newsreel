@@ -17,9 +17,21 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
 class MainHandler(BaseHandler):
+    @tornado.web.asynchronous
     def get(self):
-        genres = self.db.genres.find()
-        self.render("index.html")
+        self.write('<a href="/">List of genres</a><br>')
+        self.write('<ul>')
+        self.db.genres.find().sort([('_id', -1)]).each(self._got_genre)
+        # self.render("index.html")
+
+    def _got_genre(self, genre, error):
+        if error:
+            raise tornado.web.HTTPError(500, error)
+        elif genre:
+            self.write('<li>{}</li>'.format(genre['name']))
+        else:
+            self.write('</ul>')
+            self.finish()
 
 
 class PostNewHandler(BaseHandler):
@@ -33,7 +45,7 @@ def main():
     app = tornado.web.Application(
         [
             (r"/", MainHandler),
-            (r"/a/post/new", PostNewHandler),
+            (r"/post/new", PostNewHandler),
         ],
         cookie_secret="__THERE_IS_NO_SECRET__",
         template_path=os.path.join(os.path.dirname(__file__), "templates"),
@@ -42,6 +54,7 @@ def main():
         debug=options.debug,
         db=db,
     )
+    print('Listening on http://localhost:{}'.format(options.port))
     app.listen(options.port)
     tornado.ioloop.IOLoop.current().start()
 
