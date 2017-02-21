@@ -47,7 +47,8 @@ class PostHandler(BaseHandler):
 
 class PostNewHandler(BaseHandler):
     def get(self):
-        self.render("new.html", title=options.title)
+        entry = None
+        self.render("new.html", title=options.title, entry=entry)
 
     def post(self):
         pass

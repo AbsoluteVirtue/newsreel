@@ -19,8 +19,8 @@
   </header>
   <div class="wrap new-post">
     <form class="post-add" action="/echo" method="post">
-      <fieldset>
-          <legend class="post-add__header">Add new article</legend>
+      <fieldset class="clearfix">
+        <legend class="post-add__header">Add new article</legend>
         <div class="row">
           <div class="post-add__field">
             <label for="author-name" class="post-add__label">Author</label>
@@ -30,10 +30,15 @@
             <label for="image-link" class="post-add__label">Image source</label>
             <input class="post-add__input" id="image-link" type="url">
           </div>
+          <div class="post-add__field post-add__field--title">
+            <label for="post-title" class="post-add__label">Title</label>
+            <input class="post-add__input" id="post-title" type="text">
+          </div>
         </div>
         <label class="post-add__label" for="post-text">Body</label>
         <textarea class="post-add__textarea" name="post-text" id="post-text" cols="30" rows="10"></textarea>
         <input class="button post-add__button" type="submit" value="Post">
+        <a class="button post-add__button-cancel" href="/">Cancel</a>
       </fieldset>
     </form>
   </div>

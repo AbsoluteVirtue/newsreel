@@ -209,6 +209,10 @@ img {
   font-size: 18px;
 }
 
+.post-add__field--title {
+  width: 100%;
+}
+
 .post-add__label {
   cursor: pointer;
 }
@@ -219,6 +223,10 @@ img {
   transition: all 0.3s;
   border: 1px solid grey;
   outline: none;
+  padding-left: 10px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .post-add__input:focus,
@@ -230,6 +238,7 @@ img {
 
 .post-add__textarea {
   width: 100%;
+  padding-left: 10px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -239,9 +248,23 @@ img {
 }
 
 .post-add__button {
+  display: inline-block;
+  vertical-align: top;
+  float: left;
   outline: none;
 }
 
 .post-add__button:hover {
   background-color: #204d74;
+}
+
+.post-add__button-cancel {
+  display: inline-block;
+  vertical-align: top;
+  float: right;
+  background-color: red;
+}
+
+.post-add__button-cancel:hover {
+  background-color: darkred;
 }
