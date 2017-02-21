@@ -2,6 +2,7 @@ import os.path
 import tornado.ioloop
 import tornado.web
 import motor.motor_tornado
+import crawl
 
 from bson.json_util import dumps
 from tornado import gen
@@ -9,6 +10,13 @@ from tornado.options import define, options, parse_command_line
 
 define("port", default=8888, help="run on the given port", type=int)
 define("debug", default=True, help="run in debug mode")
+
+
+def get_rss_bson():
+    raw_data = crawl.get_sslowdown_data()
+    return
+
+# TODO: check rss result for new articles before inserting
 
 
 class BaseHandler(tornado.web.RequestHandler):
