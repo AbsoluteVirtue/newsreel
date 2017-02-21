@@ -13,6 +13,7 @@ from tornado.options import define, options, parse_command_line
 
 define("port", default=8888, help="run on the given port", type=int)
 define("debug", default=True, help="run in debug mode")
+define("title", default="The Newsreel")
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -31,7 +32,7 @@ class MainHandler(BaseHandler):
         check_rss_updates(self.collection)
         cursor = self.collection.find().sort([('date', -1)])
         docs = yield cursor.to_list(length=20)
-        self.render("index.html", items=docs)
+        self.render("index.html", title=options.title, items=docs)
 
 
 class PostHandler(BaseHandler):
@@ -40,7 +41,7 @@ class PostHandler(BaseHandler):
         doc = yield self.collection.find_one({'slug': slug})
         # if not doc:
         #     raise tornado.web.HTTPError(404)
-        self.render("post.html", item=doc)
+        self.render("post.html", title=options.title, item=doc)
 
 
 class PostNewHandler(BaseHandler):
@@ -54,11 +55,8 @@ def get_datetime(date):
 
 
 def build_post(text, source):
-    return "{}\n\nOriginal source: {}".format(text, source)
+    return "{}<br><br>Original source: {}".format(text, source)
 
-
-def generate_slug(summary):
-    return slugify.slugify(summary)
 
 
 def build_json_from_raw_data(ch_date=datetime.datetime(2000, 1, 1)):
@@ -74,7 +72,7 @@ def build_json_from_raw_data(ch_date=datetime.datetime(2000, 1, 1)):
             entry["summary"] = entry_data["summary"]
             entry["title"] = entry_data["title"]
             entry["text"] = build_post(entry_data["text"], entry_data["source"])
-            entry["slug"] = generate_slug(entry_data["summary"][:30])
+            entry["slug"] = slugify.slugify(entry_data["summary"][:30])
             result.append(deepcopy(entry))
     return result
 

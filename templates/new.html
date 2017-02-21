@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <header class="main-header">
+    <div class="wrap">
+      <h1 class="main-header__title">
+        {{ title }}
+      </h1>
+    </div>
+  </header>
+  <div class="wrap new-post">
+    <form class="post-add" action="/echo" method="post">
+      <fieldset>
+          <legend class="post-add__header">Add new article</legend>
+        <div class="row">
+          <div class="post-add__field">
+            <label for="author-name" class="post-add__label">Author</label>
+            <input class="post-add__input" id="author-name" type="text">
+          </div>
+          <div class="post-add__field">
+            <label for="image-link" class="post-add__label">Image source</label>
+            <input class="post-add__input" id="image-link" type="url">
+          </div>
+        </div>
+        <label class="post-add__label" for="post-text">Body</label>
+        <textarea class="post-add__textarea" name="post-text" id="post-text" cols="30" rows="10"></textarea>
+        <input class="button post-add__button" type="submit" value="Post">
+      </fieldset>
+    </form>
+  </div>
+</body>
+
+</html>
