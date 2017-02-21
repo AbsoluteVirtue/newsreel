@@ -50,12 +50,22 @@ class PostNewHandler(BaseHandler):
         self.render("new.html", title=options.title)
 
     def post(self):
-        author = self.get_argument("author")
+        author = self.get_argument("author", "Anonymous")
         title = self.get_argument("title")
-        image = self.get_argument("image")
+        image = validate_image(self.get_argument("image"))
         text = self.get_argument("post-text")
+        if not title or text:
+            self.redirect("/new")
 
         self.redirect("/")
+
+
+def validate_image(image):
+    checklist = ["gif", "png", "jpg"]
+    if image[-3:].lower() in checklist:
+        return image
+    else:
+        return "http://ic.pics.livejournal.com/masio/8221809/287143/287143_original.gif"
 
 
 def get_datetime(date):
