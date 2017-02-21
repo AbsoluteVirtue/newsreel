@@ -47,11 +47,15 @@ class PostHandler(BaseHandler):
 
 class PostNewHandler(BaseHandler):
     def get(self):
-        entry = None
-        self.render("new.html", title=options.title, entry=entry)
+        self.render("new.html", title=options.title)
 
     def post(self):
-        pass
+        author = self.get_argument("author")
+        title = self.get_argument("title")
+        image = self.get_argument("image")
+        text = self.get_argument("post-text")
+
+        self.redirect("/")
 
 
 def get_datetime(date):

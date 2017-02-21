@@ -18,21 +18,21 @@
     </div>
   </header>
   <div class="wrap new-post">
-    <form class="post-add" action="/echo" method="post">
+    <form class="post-add" action="/new" method="post">
       <fieldset class="clearfix">
         <legend class="post-add__header">Add new article</legend>
         <div class="row">
           <div class="post-add__field">
             <label for="author-name" class="post-add__label">Author</label>
-            <input class="post-add__input" id="author-name" type="text">
+            <input class="post-add__input" id="author-name" name="author" type="text">
           </div>
           <div class="post-add__field">
             <label for="image-link" class="post-add__label">Image source</label>
-            <input class="post-add__input" id="image-link" type="url">
+            <input class="post-add__input" id="image-link" name="image" type="url">
           </div>
           <div class="post-add__field post-add__field--title">
             <label for="post-title" class="post-add__label">Title</label>
-            <input class="post-add__input" id="post-title" type="text">
+            <input class="post-add__input" id="post-title" name="title" type="text">
           </div>
         </div>
         <label class="post-add__label" for="post-text">Body</label>
@@ -40,6 +40,7 @@
         <input class="button post-add__button" type="submit" value="Post">
         <a class="button post-add__button-cancel" href="/">Cancel</a>
       </fieldset>
+      {% raw xsrf_form_html() %}
     </form>
   </div>
 </body>
