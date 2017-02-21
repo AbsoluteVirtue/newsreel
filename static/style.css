@@ -48,6 +48,12 @@ img {
   box-sizing: border-box;
 }
 
+.button-new--add {
+  position: fixed;
+  right: 20%;
+  top: 115px;
+}
+
 
 /*MAIN-HEADER*/
 

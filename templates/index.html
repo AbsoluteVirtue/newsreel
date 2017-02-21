@@ -19,17 +19,18 @@
   </header>
   <main class="news">
     <div class="wrap">
+      <a class="button button-new--add" href="/new">Add article</a>
       {% for item in items %}
-      <article class="post">
-        <img class="post__image" src="{{ item['image'] }}" alt="img">
-        <h1 class="post__title">
+      <article class="posts">
+        <img class="posts__image" src="{{ item['image'] }}" alt="img">
+        <h1 class="posts__title">
           {{ item['title'] }}
         </h1>
         <div class="row">
-          <div class="post__author">{{ item['author'] }}</div>
-          <div class="post__date">{{ item['date'] }}</div>
+          <div class="posts__author">{{ item['author'] }}</div>
+          <div class="posts__date">{{ item['date'] }}</div>
         </div>
-        <p class="post__text">{{ item['summary'] }}</p>
+        <p class="posts__text">{{ item['summary'] }}</p>
         <a class="button button--more" href="/post/{{ item['slug'] }}">More</a>
       </article>
       {% end %}

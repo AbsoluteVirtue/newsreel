@@ -7,9 +7,10 @@ import crawl
 import slugify
 
 from copy import deepcopy
-from bson.json_util import dumps
 from tornado import gen
 from tornado.options import define, options, parse_command_line
+from bson.json_util import dumps
+
 
 define("port", default=8888, help="run on the given port", type=int)
 define("debug", default=True, help="run in debug mode")
@@ -45,6 +46,9 @@ class PostHandler(BaseHandler):
 
 
 class PostNewHandler(BaseHandler):
+    def get(self):
+        self.render("new.html", title=options.title)
+
     def post(self):
         pass
 
@@ -56,7 +60,6 @@ def get_datetime(date):
 
 def build_post(text, source):
     return "{}<br><br>Original source: {}".format(text, source)
-
 
 
 def build_json_from_raw_data(ch_date=datetime.datetime(2000, 1, 1)):
