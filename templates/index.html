@@ -30,7 +30,7 @@
           <div class="post__date">{{ item['date'] }}</div>
         </div>
         <p class="post__text">{{ item['summary'] }}</p>
-        <a class="button button--more" href="#">More</a>
+        <a class="button button--more" href="/post/{{ item['slug'] }}">More</a>
       </article>
       {% end %}
     </div>

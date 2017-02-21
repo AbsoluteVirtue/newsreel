@@ -3,10 +3,10 @@ import datetime
 import tornado.ioloop
 import tornado.web
 import motor.motor_tornado
-from copy import deepcopy
-
 import crawl
+import slugify
 
+from copy import deepcopy
 from bson.json_util import dumps
 from tornado import gen
 from tornado.options import define, options, parse_command_line
@@ -35,8 +35,12 @@ class MainHandler(BaseHandler):
 
 
 class PostHandler(BaseHandler):
-    def post(self):
-        pass
+    @gen.coroutine
+    def get(self, slug):
+        doc = yield self.collection.find_one({'slug': slug})
+        # if not doc:
+        #     raise tornado.web.HTTPError(404)
+        self.render("post.html", item=doc)
 
 
 class PostNewHandler(BaseHandler):
@@ -50,7 +54,11 @@ def get_datetime(date):
 
 
 def build_post(text, source):
-    return "{}<br><br>Original source: {}".format(text, source)
+    return "{}\n\nOriginal source: {}".format(text, source)
+
+
+def generate_slug(summary):
+    return slugify.slugify(summary)
 
 
 def build_json_from_raw_data(ch_date=datetime.datetime(2000, 1, 1)):
@@ -66,6 +74,7 @@ def build_json_from_raw_data(ch_date=datetime.datetime(2000, 1, 1)):
             entry["summary"] = entry_data["summary"]
             entry["title"] = entry_data["title"]
             entry["text"] = build_post(entry_data["text"], entry_data["source"])
+            entry["slug"] = generate_slug(entry_data["summary"][:30])
             result.append(deepcopy(entry))
     return result
 
@@ -99,7 +108,7 @@ def main():
         [
             (r"/", MainHandler),
             (r"/post/(.+)", PostHandler),
-            (r"/post/new", PostNewHandler),
+            (r"/new", PostNewHandler),
         ],
         cookie_secret="__THERE_IS_NO_SECRET_COOKIE__",
         template_path=os.path.join(os.path.dirname(__file__), "templates"),
