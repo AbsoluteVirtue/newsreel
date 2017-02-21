@@ -1,10 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <title>Newsreel: your main source of information!</title>
+  <link rel="stylesheet" href="{{ static_url('normalize.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ static_url('style.css') }}" type="text/css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
-    <p>Hello world!</p>
+  <header class="main-header">
+    <div class="wrap">
+      <h1 class="main-header__title">
+        The Newsreel
+      </h1>
+    </div>
+  </header>
+  <main class="news">
+    <div class="wrap">
+      {% for item in items %}
+      <article class="post">
+        <img class="post__image" src="{{ item['image'] }}" alt="img">
+        <h1 class="post__title">
+          {{ item['title'] }}
+        </h1>
+        <div class="row">
+          <div class="post__author">{{ item['author'] }}</div>
+          <div class="post__date">{{ item['date'] }}</div>
+        </div>
+        <p class="post__text">{{ item['summary'] }}</p>
+        <a class="button button--more" href="#">More</a>
+      </article>
+      {% end %}
+    </div>
+    <button class="button button--news">Load more</button>
+  </main>
 </body>
+
 </html>

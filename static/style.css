@@ -1,0 +1,112 @@
+body {
+  font-family: 'Helvetica', Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+  color: #000;
+}
+
+img {
+  max-width: 100%;
+}
+
+.wrap {
+  max-width: 1200px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.row {
+  font-size: 0;
+}
+
+.button {
+  display: block;
+  width: 150px;
+  padding: 10px 15px;
+  text-align: center;
+  border-radius: 10px;
+  text-decoration: none;
+  text-transform: uppercase;
+  outline: none;
+  box-shadow: none;
+  border: none;
+  color: #fff;
+  transition: all 0.5s;
+  cursor: pointer;
+  background-color: #286090;
+  border-color: #204d74;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.main-header {
+  background: linear-gradient(45deg, #92baac 45px, transparent 45px)64px 64px, linear-gradient(45deg, #92baac 45px, transparent 45px, transparent 91px, #e1ebbd 91px, #e1ebbd 135px, transparent 135px), linear-gradient(-45deg, #92baac 23px, transparent 23px, transparent 68px, #92baac 68px, #92baac 113px, transparent 113px, transparent 158px, #92baac 158px);
+  background-color: #e1ebbd;
+  background-size: 128px 128px;
+  padding: 20px 0;
+}
+
+.main-header__title {
+  margin: 0;
+  text-align: center;
+}
+
+.news {
+  padding-top: 25px;
+  padding-bottom: 25px;
+  background-color: #F2F2F2;
+}
+
+.button--news {
+  margin: 0 auto;
+  background-color: #f0ad4e;
+  border-color: #eea236;
+}
+
+.button--news:hover {
+  background-color: #ec971f;
+  border-color: #d58512;
+}
+
+.post {
+  width: 40%;
+  background-color: #fff;
+  padding: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  border: 1px solid slategrey;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.post__title {
+  margin: 10px 0;
+  text-align: center;
+  padding-bottom: 5px;
+  border-bottom: 1px dotted grey;
+}
+
+.post__author,
+.post__date {
+  display: inline-block;
+  vertical-align: top;
+  width: 50%;
+  font-size: 16px;
+}
+
+.post__date {
+  text-align: right;
+}
+
+.button--more {
+  background-color: #5cb85c;
+  border-color: #5cb85c;
+}
+
+.button--more:hover {
+  background-color: #449d44;
+  border-color: #419641;
+}

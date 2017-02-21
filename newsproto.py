@@ -1,13 +1,14 @@
 import os.path
-import pprint
 import tornado.ioloop
 import tornado.web
 import motor.motor_tornado
 
+from bson.json_util import dumps
+from tornado import gen
 from tornado.options import define, options, parse_command_line
 
 define("port", default=8888, help="run on the given port", type=int)
-define("debug", default=False, help="run in debug mode")
+define("debug", default=True, help="run in debug mode")
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -15,23 +16,17 @@ class BaseHandler(tornado.web.RequestHandler):
     def db(self):
         return self.settings['db']
 
+    @property
+    def collection(self):
+        return self.settings['collection']
+
 
 class MainHandler(BaseHandler):
-    @tornado.web.asynchronous
+    @gen.coroutine
     def get(self):
-        self.write('<a href="/">List of genres</a><br>')
-        self.write('<ul>')
-        self.db.genres.find().sort([('_id', -1)]).each(self._got_genre)
-        # self.render("index.html")
-
-    def _got_genre(self, genre, error):
-        if error:
-            raise tornado.web.HTTPError(500, error)
-        elif genre:
-            self.write('<li>{}</li>'.format(genre['name']))
-        else:
-            self.write('</ul>')
-            self.finish()
+        cursor = self.collection.find().sort([('_id', -1)])
+        docs = yield cursor.to_list(length=20)
+        self.render("index.html", items=docs)
 
 
 class PostNewHandler(BaseHandler):
@@ -42,6 +37,7 @@ class PostNewHandler(BaseHandler):
 def main():
     parse_command_line()
     db = motor.motor_tornado.MotorClient().news
+    collection = db.articles
     app = tornado.web.Application(
         [
             (r"/", MainHandler),
@@ -49,10 +45,11 @@ def main():
         ],
         cookie_secret="__THERE_IS_NO_SECRET__",
         template_path=os.path.join(os.path.dirname(__file__), "templates"),
-        # static_path=os.path.join(os.path.dirname(__file__), "static"),
+        static_path=os.path.join(os.path.dirname(__file__), "static"),
         xsrf_cookies=True,
         debug=options.debug,
         db=db,
+        collection=collection,
     )
     print('Listening on http://localhost:{}'.format(options.port))
     app.listen(options.port)
