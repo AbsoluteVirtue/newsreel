@@ -4,8 +4,8 @@ import datetime
 from copy import deepcopy
 
 
-def __get_html(address):
-    resource = requests.get(address)
+def __get_html(url):
+    resource = requests.get(url)
     try:
         resource.raise_for_status()
     except Exception as exc:
@@ -63,7 +63,7 @@ def __build_json_from_raw_data():
     entry = {}
     for entry_key, entry_data in raw_data.items():
         entry["author"] = entry_data["author"]
-        entry["date"] = __get_datetime(entry_data["date"]).strftime('%-d %B %Y')
+        entry["date"] = __get_datetime(entry_data["date"]).strftime('%d %B %Y')
         entry["image"] = entry_data["image"]
         entry["summary"] = entry_data["summary"]
         entry["title"] = entry_data["title"]
@@ -72,9 +72,4 @@ def __build_json_from_raw_data():
     return result
 
 
-def get_rss_bson():
-    articles = __build_json_from_raw_data()
-
-
-
-get_rss_bson()
+# __build_json_from_raw_data()
