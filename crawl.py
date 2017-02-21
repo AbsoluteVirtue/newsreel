@@ -1,11 +1,9 @@
 import requests
 import bs4
-import datetime
-from copy import deepcopy
 
 
-def __get_image_from_source(url):
-    """Hogs resources, too expensive to request each site's code and then parse it"""
+def __D_get_image_from_source(url):
+    """DEPRECATED: Hogs resources"""
     soup = __get_html(url)
     images = soup.select('img')
     checklist = ["gif", "png", "jpg"]
@@ -42,8 +40,11 @@ def get_sslowdown_data():
         data[key]["author"] = item.find('media:title', type="html").text
         summary = item.find('content:encoded').text[:200]
         data[key]["summary"] = summary[:(len(summary) - 4)]
-        text = item.find('content:encoded').text
-        data[key]["text"] = text[:(len(text) - 4)]
+        # text = item.find('content:encoded').text
+        data[key]["text"] = item.find('content:encoded').next  # text[:(len(text) - 4)]
         data[key]["source"] = item.find('content:encoded').a.attrs['href']
         data[key]["image"] = "http://ic.pics.livejournal.com/masio/8221809/287143/287143_original.gif"
     return data
+
+
+# get_sslowdown_data()

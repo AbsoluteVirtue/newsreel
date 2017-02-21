@@ -73,10 +73,6 @@ def get_datetime(date):
     return datetime.datetime.strptime(sliced_date, '%d %b %Y %H:%M:%S')
 
 
-def build_post(text, source):
-    return "{}<br><br>Original source: {}".format(text, source)
-
-
 def build_json_from_raw_data(ch_date=datetime.datetime(2000, 1, 1)):
     raw_data = crawl.get_sslowdown_data()
     result = []
@@ -89,7 +85,7 @@ def build_json_from_raw_data(ch_date=datetime.datetime(2000, 1, 1)):
             entry["image"] = entry_data["image"]
             entry["summary"] = entry_data["summary"]
             entry["title"] = entry_data["title"]
-            entry["text"] = build_post(entry_data["text"], entry_data["source"])
+            entry["text"] = entry_data["text"]
             entry["slug"] = slugify.slugify(entry_data["summary"][:30])
             result.append(deepcopy(entry))
     return result
