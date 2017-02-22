@@ -2,6 +2,21 @@ import requests
 import bs4
 
 
+def __D_get_image_from_source(url):
+    """DEPRECATED: Hogs resources"""
+    soup = __get_html(url)
+    images = soup.select('img')
+    checklist = ["gif", "png", "jpg"]
+    if images:
+        image_url = images[0].attrs['src']
+        if image_url[-3:].lower() in checklist and image_url[:5].lower() != "http":
+            return image_url
+        else:
+            return "http://ic.pics.livejournal.com/masio/8221809/287143/287143_original.gif"
+    else:
+        return "http://ic.pics.livejournal.com/masio/8221809/287143/287143_original.gif"
+
+
 def __get_html(url):
     resource = requests.get(url)
     try:
