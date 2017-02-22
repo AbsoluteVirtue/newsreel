@@ -3,6 +3,8 @@ import datetime
 import tornado.ioloop
 import tornado.web
 import motor.motor_tornado
+from bson import ObjectId
+
 import crawl
 import slugify
 import bleach
@@ -51,6 +53,7 @@ class MainHandler(BaseHandler):
         self.redirect("/")
         # self.render("index.html", title=options.title, items=docs)
 
+    @gen.coroutine
     def search(self, query_string):
         print(query_string)
         search = self.search_engine.search('title:{} OR text:{}'.format(query_string, query_string), index='articles')
@@ -58,7 +61,8 @@ class MainHandler(BaseHandler):
         entries = list()
         for result in results:
             _id = result['_source']['id']
-
+            doc = yield self.collection.find_one({'_id': ObjectId(_id)})
+            entries.append(doc)
         return entries
 
 
