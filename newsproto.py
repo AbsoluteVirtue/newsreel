@@ -5,6 +5,8 @@ import tornado.web
 import motor.motor_tornado
 import crawl
 import slugify
+import bleach
+import bs4
 
 from copy import deepcopy
 from tornado import gen
@@ -53,8 +55,11 @@ class PostNewHandler(BaseHandler):
         author = self.get_argument("author", "Anonymous")
         title = self.get_argument("title")
         image = validate_image(self.get_argument("image"))
-        text = self.get_argument("post-text")
-        if not title or text:
+        html = self.get_argument("post-text")
+        if not title or html:
+            self.redirect("/new")
+        text = validate_html(html)
+        if text is None:
             self.redirect("/new")
 
         self.redirect("/")
@@ -66,6 +71,18 @@ def validate_image(image):
         return image
     else:
         return "http://ic.pics.livejournal.com/masio/8221809/287143/287143_original.gif"
+
+
+def validate_html(text):
+    sites = ['youtube.com', 'play.md', 'vimeo.com']
+    soup = bs4.BeautifulSoup(text, "lxml")
+    sources = soup.find_all('iframe', {"src": True})
+    for source in sources:
+        if not any(x in source['src'] for x in sites):
+            return None
+    tags = ['b', 'p', 'i', 'strong', 'em', 'img', 'iframe']
+    attributes = {'img': ['src'], 'iframe': ['src']}
+    return bleach.clean(text, tags, attributes)
 
 
 def get_datetime(date):
