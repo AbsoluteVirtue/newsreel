@@ -15,12 +15,15 @@
       <h1 class="main-header__title">
         {{ title }}
       </h1>
+      <form class="search-form" action="/echo" method="post">
+        <input class="search-form__input" type="search" name="search" placeholder="Поиск по сайту">
+        <input class="button button--search" type="submit" value="Search">
+      </form>
     </div>
   </header>
   <main class="news">
     <div class="wrap">
-      <a class="button button-new--add" href="/new">Add article</a>
-      {% for item in items %}
+      <a class="button button-new--add" href="/new">Add article</a> {% for item in items %}
       <article class="posts">
         <img class="posts__image" src="{{ item['image'] }}" alt="img">
         <h1 class="posts__title">
