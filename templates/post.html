@@ -19,7 +19,7 @@
   </header>
   <div class="wrap">
     <article class="post clearfix">
-      <img class="post__header-image" src="http://placehold.it/550x150" alt="img">
+      <img class="post__header-image" src="{{ item['image'] }}" alt="img">
       <h1 class="post__title">
         {{ item['title'] }}
       </h1>
@@ -28,8 +28,7 @@
         <div class="posts__date">{{ item['date'] }}</div>
       </div>
       <p class="post__text">{{ item['text'] }}</p>
-      <img class="post__content-img" src="http://placehold.it/550x150" alt="img">
-      <p class="post__text">{{ item['text'] }}</p>
+
       <a class="button button--more" href="/">Back</a>
     </article>
   </div>

@@ -56,13 +56,12 @@ class PostNewHandler(BaseHandler):
             error = "All fields are required"
         self.render("new.html", title=options.title, error=error)
 
+    @gen.coroutine
     def post(self):
+        entry = {}
         author = self.get_argument("author", "Anonymous")
-        print(author)
         title = self.get_argument("title")
-        print(title)
         image = validate_image(self.get_argument("image"))
-        print(image)
         html = self.get_argument("post-text")
         text = validate_html(html)
         if not title:
@@ -75,7 +74,22 @@ class PostNewHandler(BaseHandler):
             error = u"?error=" + escape.url_escape("Forbidden or invalid url detected in post body.")
             self.redirect("/new" + error)
         else:
-            self.redirect("/")
+            summary = generate_summary(text)
+            slug = slugify.slugify(summary[:30])
+            entry["author"] = author
+            entry["date"] = datetime.datetime.now()
+            entry["image"] = image
+            entry["summary"] = summary
+            entry["title"] = title
+            entry["text"] = text
+            entry["slug"] = slug
+            yield self.collection.insert_one(entry)
+            self.redirect("/post/" + slug)
+
+
+def generate_summary(text):
+    soup = bs4.BeautifulSoup(text, "lxml")
+    return soup.get_text()[:200]
 
 
 def validate_image(image):
