@@ -7,13 +7,13 @@ import crawl
 import slugify
 import bleach
 import bs4
+import sys
 
 from copy import deepcopy
 from tornado import gen
 from tornado import escape
 from tornado.options import define, options, parse_command_line
-
-import sys
+from pyelasticsearch import ElasticSearch
 
 
 define("port", default=8888, help="run on the given port", type=int)
@@ -30,6 +30,10 @@ class BaseHandler(tornado.web.RequestHandler):
     def collection(self):
         return self.settings['collection']
 
+    @property
+    def search_engine(self):
+        return self.settings['search']
+
 
 class MainHandler(BaseHandler):
     @gen.coroutine
@@ -40,7 +44,22 @@ class MainHandler(BaseHandler):
         self.render("index.html", title=options.title, items=docs)
 
     def post(self):
-        pass
+        query = self.get_argument("search")
+        docs = self.search(query)
+
+        error = u"search?q=" + escape.url_escape("query.")
+        self.redirect("/")
+        # self.render("index.html", title=options.title, items=docs)
+
+    def search(self, query_string):
+        print(query_string)
+        search = self.search_engine.search('title:{} OR text:{}'.format(query_string, query_string), index='articles')
+        results = search['hits']['hits']
+        entries = list()
+        for result in results:
+            _id = result['_source']['id']
+
+        return entries
 
 
 class PostHandler(BaseHandler):
@@ -50,9 +69,6 @@ class PostHandler(BaseHandler):
         # if not doc:
         #     raise tornado.web.HTTPError(404)
         self.render("post.html", title=options.title, item=doc)
-
-    def post(self):
-        pass
 
 
 class PostNewHandler(BaseHandler):
@@ -91,12 +107,17 @@ class PostNewHandler(BaseHandler):
             entry["text"] = text
             entry["slug"] = slug
             _id = yield self.collection.insert_one(entry)
-            index_entry(_id, title, summary)
+            index_entry(self.search_engine, _id, title, summary)
             self.redirect("/post/" + slug)
 
 
-def index_entry(_id, title, summary):
-    pass
+def index_entry(search_engine, _id, title, summary):
+    object_id = str(_id.inserted_id)
+    entry = dict()
+    entry['id'] = object_id
+    entry['title'] = title
+    entry['text'] = summary
+    search_engine.index('articles', 'external', entry)
 
 
 def generate_summary(text):
@@ -170,10 +191,10 @@ def check_rss_updates(collection):
 
 def main():
     # sys.setrecursionlimit(10000)
-
     parse_command_line()
     db = motor.motor_tornado.MotorClient().news
     collection = db.articles
+    search_engine = ElasticSearch('http://localhost:9200/')
     app = tornado.web.Application(
         [
             (r"/", MainHandler),
@@ -187,6 +208,7 @@ def main():
         debug=options.debug,
         db=db,
         collection=collection,
+        search=search_engine,
     )
     print('Listening on http://localhost:{}'.format(options.port))
     app.listen(options.port)
