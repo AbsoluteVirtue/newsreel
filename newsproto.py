@@ -10,6 +10,7 @@ import bs4
 
 from copy import deepcopy
 from tornado import gen
+from tornado import escape
 from tornado.options import define, options, parse_command_line
 from bson.json_util import dumps
 
@@ -49,20 +50,32 @@ class PostHandler(BaseHandler):
 
 class PostNewHandler(BaseHandler):
     def get(self):
-        self.render("new.html", title=options.title)
+        try:
+            error = self.get_argument("error")
+        except:
+            error = "All fields are required"
+        self.render("new.html", title=options.title, error=error)
 
     def post(self):
         author = self.get_argument("author", "Anonymous")
+        print(author)
         title = self.get_argument("title")
+        print(title)
         image = validate_image(self.get_argument("image"))
+        print(image)
         html = self.get_argument("post-text")
-        if not title or html:
-            self.redirect("/new")
         text = validate_html(html)
-        if text is None:
-            self.redirect("/new")
-
-        self.redirect("/")
+        if not title:
+            error = u"?error=" + escape.url_escape("Title must be filled.")
+            self.redirect("/new" + error)
+        elif not html:
+            error = u"?error=" + escape.url_escape("Post cannot be empty.")
+            self.redirect("/new" + error)
+        elif text is None:
+            error = u"?error=" + escape.url_escape("Forbidden or invalid url detected in post body.")
+            self.redirect("/new" + error)
+        else:
+            self.redirect("/")
 
 
 def validate_image(image):

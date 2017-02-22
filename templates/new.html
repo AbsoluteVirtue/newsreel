@@ -19,16 +19,21 @@
   </header>
   <div class="wrap new-post">
     <form class="post-add" action="/new" method="post">
+
+      <fieldset>
+        <span class="error">{{ error }}</span>
+      </fieldset>
+
       <fieldset class="clearfix">
         <legend class="post-add__header">Add new article</legend>
         <div class="row">
           <div class="post-add__field">
             <label for="author-name" class="post-add__label">Author</label>
-            <input class="post-add__input" id="author-name" name="author" type="text">
+            <input class="post-add__input" id="author-name" name="author" type="text" value="Anonymous">
           </div>
           <div class="post-add__field">
             <label for="image-link" class="post-add__label">Image source</label>
-            <input class="post-add__input" id="image-link" name="image" type="url">
+            <input class="post-add__input" id="image-link" name="image" type="url" value="http://ic.pics.livejournal.com/masio/8221809/287143/287143_original.gif">
           </div>
           <div class="post-add__field post-add__field--title">
             <label for="post-title" class="post-add__label">Title</label>
