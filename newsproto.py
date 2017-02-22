@@ -12,7 +12,8 @@ from copy import deepcopy
 from tornado import gen
 from tornado import escape
 from tornado.options import define, options, parse_command_line
-from bson.json_util import dumps
+
+import sys
 
 
 define("port", default=8888, help="run on the given port", type=int)
@@ -77,7 +78,7 @@ class PostNewHandler(BaseHandler):
             summary = generate_summary(text)
             slug = slugify.slugify(summary[:30])
             entry["author"] = author
-            entry["date"] = datetime.datetime.now()
+            entry["date"] = datetime.datetime.now().replace(microsecond=0)
             entry["image"] = image
             entry["summary"] = summary
             entry["title"] = title
@@ -157,6 +158,8 @@ def check_rss_updates(collection):
 
 
 def main():
+    # sys.setrecursionlimit(10000)
+
     parse_command_line()
     db = motor.motor_tornado.MotorClient().news
     collection = db.articles

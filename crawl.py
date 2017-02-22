@@ -40,7 +40,7 @@ def get_sslowdown_data():
         data[key]["author"] = item.find('media:title', type="html").text
         summary = item.find('content:encoded').text[:200]
         data[key]["summary"] = summary[:(len(summary) - 4)]
-        data[key]["text"] = item.find('content:encoded').next
+        data[key]["text"] = str(item.find('content:encoded').next)
         data[key]["source"] = item.find('content:encoded').a.attrs['href']
         data[key]["image"] = "http://ic.pics.livejournal.com/masio/8221809/287143/287143_original.gif"
     return data
