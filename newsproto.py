@@ -39,6 +39,9 @@ class MainHandler(BaseHandler):
         docs = yield cursor.to_list(length=20)
         self.render("index.html", title=options.title, items=docs)
 
+    def post(self):
+        pass
+
 
 class PostHandler(BaseHandler):
     @gen.coroutine
@@ -47,6 +50,9 @@ class PostHandler(BaseHandler):
         # if not doc:
         #     raise tornado.web.HTTPError(404)
         self.render("post.html", title=options.title, item=doc)
+
+    def post(self):
+        pass
 
 
 class PostNewHandler(BaseHandler):
@@ -84,8 +90,13 @@ class PostNewHandler(BaseHandler):
             entry["title"] = title
             entry["text"] = text
             entry["slug"] = slug
-            yield self.collection.insert_one(entry)
+            _id = yield self.collection.insert_one(entry)
+            index_entry(_id, title, summary)
             self.redirect("/post/" + slug)
+
+
+def index_entry(_id, title, summary):
+    pass
 
 
 def generate_summary(text):

@@ -15,9 +15,10 @@
       <h1 class="main-header__title">
         {{ title }}
       </h1>
-      <form class="search-form" action="/echo" method="post">
-        <input class="search-form__input" type="search" name="search" placeholder="Поиск по сайту">
+      <form class="search-form" action="/" method="post">
+        <input class="search-form__input" type="search" name="search" placeholder="Enter search query">
         <input class="button button--search" type="submit" value="Search">
+        {% raw xsrf_form_html() %}
       </form>
     </div>
   </header>
