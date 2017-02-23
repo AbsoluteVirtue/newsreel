@@ -9,7 +9,6 @@ import crawl
 import slugify
 import bleach
 import bs4
-import sys
 
 from copy import deepcopy
 from tornado import gen
@@ -73,8 +72,8 @@ class PostHandler(BaseHandler):
     @gen.coroutine
     def get(self, slug):
         doc = yield self.collection.find_one({'slug': slug})
-        # if not doc:
-        #     raise tornado.web.HTTPError(404)
+        if not doc:
+            raise tornado.web.HTTPError(404)
         self.render("post.html", title=options.title, item=doc)
 
 
@@ -197,7 +196,6 @@ def check_rss_updates(collection):
 
 
 def main():
-    # sys.setrecursionlimit(10000)
     parse_command_line()
     db = motor.motor_tornado.MotorClient().news
     collection = db.articles
