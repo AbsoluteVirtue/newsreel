@@ -9,6 +9,7 @@ Currently the app assumes there's an instance of <strong>MongoDB</strong> runnin
 It also assumes there's an instance of <strong>Elasticsearch</strong> on the default port, that has an index called 'articles' with a type 'external'.
 
 TODOs:
+- replace MongoDB with Elasticsearch as the main front-end data storage, use MongoDB as backup/Source of Truth;
 - have plugs in place for both connections (Mongo and Elasticsearch) in case the actual connection(s) is/are missing, so the page still loads with dummmy data and navigating the page doesn't produce errors;
 - eventually replace both with in-memory temp storage to have the site act as a working demo rather than a bunch of code;
 - rewrite the whole README as a tutorial on Tornado-Motor-Elasticsearch integration into a Python web application;
