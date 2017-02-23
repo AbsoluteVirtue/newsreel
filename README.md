@@ -1,5 +1,5 @@
 # newsreel
-A simple prototype for educational purposes.
+A simple prototype, built mainly for (self)educational purposes.
 
 Currently the app assumes there's an instance of <strong>MongoDB</strong> running on the default port, it expects there to be a database called 'news' with an 'articles' collection in it.
 <br><br>Quick start: spin up an instance of <b>mongod</b> and run the following command in a terminal:
