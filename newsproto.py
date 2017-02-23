@@ -43,19 +43,22 @@ class MainHandler(BaseHandler):
         check_rss_updates(self.collection)
         cursor = self.collection.find().sort([('date', -1)])
         docs = yield cursor.to_list(length=20)
-        self.render("index.html", title=options.title, items=docs)
+        self.render("index.html", title=options.title, items=docs, error="")
 
+    @gen.coroutine
     def post(self):
         query = self.get_argument("search")
-        docs = self.search(query)
-
-        error = u"search?q=" + escape.url_escape("query.")
-        self.redirect("/")
-        # self.render("index.html", title=options.title, items=docs)
+        if query is "":
+            self.redirect("/")
+        else:
+            docs = yield self.search(query)
+            if len(docs) > 0:
+                self.render("index.html", title=options.title, items=docs, error="")
+            else:
+                self.render("index.html", title=options.title, items=docs, error="No matches for your query")
 
     @gen.coroutine
     def search(self, query_string):
-        print(query_string)
         search = self.search_engine.search('title:{} OR text:{}'.format(query_string, query_string), index='articles')
         results = search['hits']['hits']
         entries = list()
