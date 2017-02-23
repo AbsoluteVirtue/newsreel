@@ -4,7 +4,7 @@ A simple prototype for educational purposes.
 Currently the app assumes there's an instance of <strong>MongoDB</strong> running on the default port, it expects there to be a database called 'news' with an 'articles' collection in it.
 <br><br>Quick start: spin up an instance of <b>mongod</b> and run the following command in a terminal:
 
-<code>mongoimport -d news -c articles < "<path to articles.json>" --jsonArray</code>
+<code>mongoimport -d news -c articles < "\<path to articles.json\>" --jsonArray</code>
 
 It also assumes there's an instance of <strong>Elasticsearch</strong> on the default port, that has an index called 'articles' with a type 'external'.
 
