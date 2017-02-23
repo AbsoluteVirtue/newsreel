@@ -20,6 +20,7 @@ from pyelasticsearch import ElasticSearch
 define("port", default=8888, help="run on the given port", type=int)
 define("debug", default=True, help="run in debug mode")
 define("title", default="The Newsreel")
+define("pages", default=20, type=int)
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -38,10 +39,14 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class MainHandler(BaseHandler):
     @gen.coroutine
-    def get(self):
+    def get(self, slug):
+        if slug is None:
+            options.pages = 20
+        elif slug == "more=":
+            options.pages += 20
         check_rss_updates(self.collection)
         cursor = self.collection.find().sort([('date', -1)])
-        docs = yield cursor.to_list(length=20)
+        docs = yield cursor.to_list(length=options.pages)
         self.render("index.html", title=options.title, items=docs, error="")
 
     @gen.coroutine
@@ -202,7 +207,7 @@ def main():
     search_engine = ElasticSearch('http://localhost:9200/')
     app = tornado.web.Application(
         [
-            (r"/", MainHandler),
+            (r"/(more=)?", MainHandler),
             (r"/post/(.+)", PostHandler),
             (r"/new", PostNewHandler),
         ],
